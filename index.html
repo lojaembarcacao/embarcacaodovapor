@@ -831,7 +831,7 @@ function update(animate=false){
   const items = Object.values(cart);
 
   if(items.length === 0){
-    listEl.innerHTML = <div style="opacity:.8; padding:10px 2px;">Seu carrinho está vazio.</div>;
+    listEl.innerHTML = `<div style="opacity:.8; padding:10px 2px;">Seu carrinho está vazio.</div>`;
     return;
   }
 
@@ -868,6 +868,26 @@ function sendWhats(){
     alert("Seu carrinho está vazio.");
     return;
   }
+
+  let msg = `🛒 *NOVO PEDIDO* — Embarcação do Vapor\n\n`;
+  msg += `📦 *Itens do pedido:*\n\n`;
+
+  items.forEach(item => {
+    const subtotal = item.p * item.qty;
+    msg += `• ${item.n}\n`;
+    msg += `  Quantidade: ${item.qty}\n`;
+    msg += `  Valor unitário: R$ ${item.p.toFixed(2)}\n`;
+    msg += `  Subtotal: R$ ${subtotal.toFixed(2)}\n\n`;
+  });
+
+  msg += `——————————————\n`;
+  msg += `💰 *Total do pedido:* R$ ${calcTotal().toFixed(2)}\n\n`;
+  msg += `📍 *Por favor, informe seu bairro ou endereço para darmos continuidade ao atendimento.*`;
+
+  const url = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+  window.open(url, "_blank");
+}
+
 
   let msg = "Pedido - Embarcação do Vapor\n\n";
   items.forEach(item => {
@@ -927,6 +947,7 @@ update(false);
 
 </body>
 </html>
+
 
 
 
