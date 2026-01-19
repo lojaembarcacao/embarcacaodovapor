@@ -888,27 +888,6 @@ function sendWhats(){
   window.open(url, "_blank");
 }
 
-
-  let msg = "Pedido - Embarcação do Vapor\n\n";
-  items.forEach(item => {
-    msg += • ${item.n} (x${item.qty}) - R$ ${(item.p * item.qty).toFixed(2)}\n;
-  });
-  msg += \nTotal: R$ ${calcTotal().toFixed(2)};
-
-  const url = https://wa.me/${phone}?text=${encodeURIComponent(msg)};
-  window.open(url, "_blank");
-}
-
-  let msg = "Pedido - Embarcação do Vapor\n\n";
-  items.forEach(item => {
-    msg += • ${item.n} (x${item.qty}) - R$ ${(item.p * item.qty).toFixed(2)}\n;
-  });
-  msg += \nTotal: R$ ${calcTotal().toFixed(2)};
-
-  const url = https://wa.me/${phone}?text=${encodeURIComponent(msg)};
-  window.open(url, "_blank");
-}
-
 /* Menu ativo ao rolar */
 const links = document.querySelectorAll("#menu a");
 const sections = ["home","produtos","sobre","politica"].map(id => document.getElementById(id));
@@ -947,6 +926,7 @@ update(false);
 
 </body>
 </html>
+
 
 
 
