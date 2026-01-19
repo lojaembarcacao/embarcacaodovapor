@@ -565,7 +565,8 @@ header{
 <header>
   <div class="nav">
     <a class="brand" href="#home">
-      <img src="img/logo.png" alt="Logo" />
+      <img src="./img/logo.png" alt="Logo" />
+
       <strong>EMBARCAÇÃO</strong>
     </a>
 
@@ -694,9 +695,10 @@ header{
 </aside>
 
 <script>
-<script>
 const phone = "5562982017808";
-  const products = [
+
+/* ✅ PRODUTOS (com filtros automáticos) */
+const products = [
   { n: "BlackSheep 30k",  p: 120, img: "./img/blacksheep-30k.png",  brand:"BlackSheep" },
 
   { n: "Elfbar TE 30k",   p: 125, img: "./img/elfbar-te-30k.png",   brand:"Elfbar" },
@@ -713,11 +715,33 @@ const phone = "5562982017808";
   { n: "Sex Addict 28k",  p: 110, img: "./img/sexaddict-28k.png",   brand:"Outros" }
 ];
 
+/* ===== MODAL +18 ===== */
+const AGE_KEY = "age_ok_v1";
+function openAgeModal(){
+  document.getElementById("ageModal").classList.add("show");
+  document.body.style.overflow = "hidden";
+}
+function closeAgeModal(){
+  document.getElementById("ageModal").classList.remove("show");
+  document.body.style.overflow = "";
+}
+function acceptAge(){
+  localStorage.setItem(AGE_KEY, "1");
+  closeAgeModal();
+}
+function rejectAge(){
+  window.location.href = "https://www.google.com";
+}
+(function initAgeGate(){
+  const ok = localStorage.getItem(AGE_KEY) === "1";
+  if(!ok) openAgeModal();
+})();
+
+/* ===== FILTROS AUTOMÁTICOS ===== */
 let currentFilter = "all";
 const grid = document.getElementById("products");
 const filtersEl = document.getElementById("filters");
 
-/* ===== CRIA FILTROS AUTOMATICAMENTE ===== */
 function buildFilters(){
   const brands = ["all", ...new Set(products.map(p => p.brand))];
   filtersEl.innerHTML = "";
@@ -733,137 +757,15 @@ function buildFilters(){
 
 function setFilter(filter){
   currentFilter = filter;
-  document.querySelectorAll(".chip").forEach(b => b.classList.remove("active"));
+  document.querySelectorAll("#filters .chip").forEach(b => b.classList.remove("active"));
   [...filtersEl.children]
     .find(b => b.textContent === (filter === "all" ? "Todos" : filter))
     .classList.add("active");
   renderProducts();
 }
 
-/* ===== RENDERIZA PRODUTOS ===== */
-function renderProducts(){
-  grid.innerHTML = "";
-
-  const list = products.filter(p =>
-    currentFilter === "all" || p.brand === currentFilter
-  );
-
-  list.forEach((p, i) => {
-    grid.innerHTML += `
-      <div class="product">
-        <img src="${p.img}" alt="${p.n}" onerror="this.src='./img/logo.png'">
-        <h3>${p.n}</h3>
-        <div class="flavors">
-          <div class="flavors-title">Sabores:</div>
-          <span class="flavor">Consulte no WhatsApp</span>
-        </div>
-        <div class="price">R$ ${p.p.toFixed(2)}</div>
-        <button class="buy-btn" onclick="add(${i})">Adicionar</button>
-      </div>
-    `;
-  });
-}
-
-/* ===== INIT ===== */
-buildFilters();
-renderProducts();
-
-
-/* ✅ PRODUTOS — NOMES BATEM COM A PASTA img */
-
-];
-
-</script>
-
-/* ===== MODAL +18 ===== */
-const AGE_KEY = "age_ok_v1";
-
-function openAgeModal(){
-  const m = document.getElementById("ageModal");
-  m.classList.add("show");
-  document.body.style.overflow = "hidden";
-}
-function closeAgeModal(){
-  const m = document.getElementById("ageModal");
-  m.classList.remove("show");
-  document.body.style.overflow = "";
-}
-
-function acceptAge(){
-  localStorage.setItem(AGE_KEY, "1");
-  closeAgeModal();
-}
-
-function rejectAge(){
-  window.location.href = "https://www.google.com";
-}
-
-(function initAgeGate(){
-  const ok = localStorage.getItem(AGE_KEY) === "1";
-  if(!ok) openAgeModal();
-})();
-/* ===== /MODAL +18 ===== */
-
-let currentFilter = "all";
-function setFilter(f){
-  currentFilter = f;
-  document.querySelectorAll(".chip").forEach(b => b.classList.remove("active"));
-  const map = {all:0, Elfbar:1, Ignite:2};
-  document.querySelectorAll(".chip")[map[f]].classList.add("active");
-  renderProducts();
-}
-
+/* ===== CARRINHO ===== */
 let cart = {}; // key => {n,p,qty}
-const grid = document.getElementById("products");
-
-function flavorsHTML(){
-  return `
-    <div class="flavors">
-      <div class="flavors-title">Sabores:</div>
-      <span class="flavor">Consulte no WhatsApp</span>
-    </div>
-  `;
-}
-
-function imgSrc(path){ return encodeURI(path); }
-
-function renderProducts(){
-  grid.innerHTML = "";
-  const list = products.filter(p => currentFilter === "all" ? true : p.brand === currentFilter);
-
-  list.forEach((p)=>{
-    const idx = products.indexOf(p);
-    grid.innerHTML += `
-      <div class="product">
-        <img src="${imgSrc(p.img)}" alt="${p.n}" onerror="this.onerror=null; this.src='img/logo.png';">
-        <h3>${p.n}</h3>
-        ${flavorsHTML()}
-        <div class="price">R$ ${p.p.toFixed(2)}</div>
-        <button class="buy-btn" onclick="add(${idx})">Adicionar</button>
-      </div>`;
-  });
-}
-
-function add(i){
-  const p = products[i];
-  const key = p.n;
-  if(cart[key]) cart[key].qty += 1;
-  else cart[key] = { n: p.n, p: p.p, qty: 1 };
-  update(true);
-  openCart();
-}
-
-function removeItem(key){
-  if(!cart[key]) return;
-  cart[key].qty -= 1;
-  if(cart[key].qty <= 0) delete cart[key];
-  update(true);
-}
-
-function clearCart(){
-  cart = {};
-  update(true);
-}
 
 function calcTotal(){
   return Object.values(cart).reduce((sum, item) => sum + (item.p * item.qty), 0);
@@ -913,7 +815,49 @@ function update(animate=false){
   });
 }
 
-/* Drawer cart */
+function add(i){
+  const p = products[i];
+  const key = p.n;
+  if(cart[key]) cart[key].qty += 1;
+  else cart[key] = { n: p.n, p: p.p, qty: 1 };
+  update(true);
+  openCart();
+}
+
+function removeItem(key){
+  if(!cart[key]) return;
+  cart[key].qty -= 1;
+  if(cart[key].qty <= 0) delete cart[key];
+  update(true);
+}
+
+function clearCart(){
+  cart = {};
+  update(true);
+}
+
+/* ===== RENDER PRODUTOS ===== */
+function renderProducts(){
+  grid.innerHTML = "";
+  const list = products.filter(p => currentFilter === "all" || p.brand === currentFilter);
+
+  list.forEach((p, i) => {
+    grid.innerHTML += `
+      <div class="product">
+        <img src="${p.img}" alt="${p.n}" onerror="this.onerror=null; this.src='./img/logo.png';">
+        <h3>${p.n}</h3>
+        <div class="flavors">
+          <div class="flavors-title">Sabores:</div>
+          <span class="flavor">Consulte no WhatsApp</span>
+        </div>
+        <div class="price">R$ ${p.p.toFixed(2)}</div>
+        <button class="buy-btn" onclick="add(${i})">Adicionar</button>
+      </div>
+    `;
+  });
+}
+
+/* ===== Drawer cart ===== */
 function openCart(){
   document.getElementById("drawer").classList.add("open");
   document.getElementById("drawerOverlay").classList.add("open");
@@ -946,8 +890,7 @@ function sendWhats(){
   msg += `💰 *Total do pedido:* R$ ${calcTotal().toFixed(2)}\n\n`;
   msg += `📍 *Por favor, informe seu bairro ou endereço para darmos continuidade ao atendimento.*`;
 
-  const url = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
-  window.open(url, "_blank");
+  window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, "_blank");
 }
 
 /* Menu ativo ao rolar */
@@ -968,27 +911,20 @@ document.getElementById("year").innerText = new Date().getFullYear();
 const burger = document.getElementById("burger");
 const mobileMenu = document.getElementById("mobileMenu");
 
-burger.addEventListener("click", ()=>{
-  mobileMenu.classList.toggle("open");
-});
-
-function closeMobileMenu(){
-  mobileMenu.classList.remove("open");
-}
-
-/* fecha menu mobile ao clicar fora */
+burger.addEventListener("click", ()=> mobileMenu.classList.toggle("open"));
+function closeMobileMenu(){ mobileMenu.classList.remove("open"); }
 document.addEventListener("click", (e)=>{
-  const isClickInside = mobileMenu.contains(e.target) || burger.contains(e.target);
-  if(!isClickInside) mobileMenu.classList.remove("open");
+  const inside = mobileMenu.contains(e.target) || burger.contains(e.target);
+  if(!inside) mobileMenu.classList.remove("open");
 });
 
+/* INIT */
+buildFilters();
 renderProducts();
 update(false);
 </script>
 
-</body>
-</html>
-s
+
 
 
 
