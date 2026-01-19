@@ -698,9 +698,8 @@ header{
 <script>
 const phone = "5562982017808";
 
-/* ✅ AJUSTE AQUI SE MUDAR NOMES DOS ARQUIVOS */
+/* ✅ LISTA DE PRODUTOS (CORRIGIDO) */
 const products = [
-  const products = [
   { n: "Elfbar TE 30k",   p: 125, img: "img/elfbar-te-30k.png",   sabores: [], brand:"Elfbar" },
   { n: "Elfbar TE 40k",   p: 135, img: "img/elfbar-te-40k.png",   sabores: [], brand:"Elfbar" },
   { n: "Elfbar Trio 40k", p: 140, img: "img/elfbar-trio-40k.png", sabores: [], brand:"Elfbar" },
@@ -752,7 +751,6 @@ function setFilter(f){
 let cart = {}; // key => {n,p,qty}
 const grid = document.getElementById("products");
 
-/* ✅ CORRIGIDO */
 function flavorsHTML(){
   return `
     <div class="flavors">
@@ -762,7 +760,6 @@ function flavorsHTML(){
   `;
 }
 
-/* mantém bom p/ nomes com espaço */
 function imgSrc(path){ return encodeURI(path); }
 
 function renderProducts(){
@@ -862,7 +859,6 @@ function closeCart(){
 }
 window.addEventListener("keydown", (e)=>{ if(e.key === "Escape") closeCart(); });
 
-/* ✅ CORRIGIDO */
 function sendWhats(){
   const items = Object.values(cart);
   if(items.length === 0){
@@ -927,9 +923,4 @@ update(false);
 
 </body>
 </html>
-
-
-
-
-
-
+s
