@@ -2,6 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8" />
+  
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Embarcação do Vapor</title>
 
@@ -441,17 +442,6 @@ header{
 .drawer.open{transform:translateX(0)}
 .drawer-overlay.open{opacity:1; pointer-events:auto}
 
-/* ✅ melhoria pro “Finalizar” no mobile */
-.drawer-actions .btn{
-  min-height:48px;
-}
-button, .btn, .buy-btn, .btn-top, .drawer-close, .chip{
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-}
-/* ✅ trava scroll do fundo quando carrinho abre */
-html.cart-open, body.cart-open{ overflow:hidden !important; }
-
 .drawer-header{
   padding:16px 14px 12px;
   display:flex;
@@ -562,8 +552,8 @@ html.cart-open, body.cart-open{ overflow:hidden !important; }
     </p>
 
     <div class="age-actions">
-      <button class="btn-yes" type="button" onclick="acceptAge()">Sim, tenho 18+</button>
-      <button class="btn-no" type="button" onclick="rejectAge()">Não</button>
+      <button class="btn-yes" onclick="acceptAge()">Sim, tenho 18+</button>
+      <button class="btn-no" onclick="rejectAge()">Não</button>
     </div>
 
     <div class="age-foot">
@@ -576,10 +566,11 @@ html.cart-open, body.cart-open{ overflow:hidden !important; }
   <div class="nav">
     <a class="brand" href="#home">
       <img src="./img/logo.png" alt="Logo" />
+
       <strong>EMBARCAÇÃO DO VAPOR</strong>
     </a>
 
-    <button class="burger" id="burger" aria-label="Abrir menu" type="button">
+    <button class="burger" id="burger" aria-label="Abrir menu">
       <span></span>
     </button>
 
@@ -594,7 +585,7 @@ html.cart-open, body.cart-open{ overflow:hidden !important; }
       <a class="btn-top" href="https://wa.me/5562982017808" target="_blank" rel="noopener">
         <span class="badge-dot"></span> WhatsApp
       </a>
-      <button class="btn-top primary" type="button" onclick="openCart()">Carrinho</button>
+      <button class="btn-top primary" onclick="openCart()">Carrinho</button>
     </div>
   </div>
 
@@ -616,8 +607,8 @@ html.cart-open, body.cart-open{ overflow:hidden !important; }
         <p>Pods com entrega rápida e atendimento direto no WhatsApp. Escolha seus produtos, adicione ao carrinho e finalize em 1 clique.</p>
 
         <div class="hero-ctas">
-          <button class="btn" type="button" onclick="document.getElementById('produtos').scrollIntoView({behavior:'smooth'})">Ver nossos produtos</button>
-          <button class="btn secondary" type="button" onclick="openCart()">Ver carrinho</button>
+          <button class="btn" onclick="document.getElementById('produtos').scrollIntoView({behavior:'smooth'})">Ver nossos produtos</button>
+          <button class="btn secondary" onclick="openCart()">Ver carrinho</button>
         </div>
       </div>
 
@@ -635,7 +626,10 @@ html.cart-open, body.cart-open{ overflow:hidden !important; }
 
 <section id="produtos" class="section">
   <h2 class="h2">Nossos produtos</h2>
+
   <div class="filters" id="filters"></div>
+
+
   <div class="products" id="products"></div>
 </section>
 
@@ -673,7 +667,7 @@ html.cart-open, body.cart-open{ overflow:hidden !important; }
     <span class="label">Total</span>
     <span class="value">R$ <span id="total">0.00</span></span>
   </div>
-  <button type="button" onclick="openCart()">Ver Carrinho</button>
+  <button onclick="openCart()">Ver Carrinho</button>
 </div>
 
 <!-- OVERLAY + CARRINHO LATERAL -->
@@ -682,7 +676,7 @@ html.cart-open, body.cart-open{ overflow:hidden !important; }
 <aside class="drawer" id="drawer">
   <div class="drawer-header">
     <div class="drawer-title">Carrinho</div>
-    <button class="drawer-close" type="button" onclick="closeCart()">×</button>
+    <button class="drawer-close" onclick="closeCart()">×</button>
   </div>
 
   <div class="drawer-body" id="cartItems"></div>
@@ -694,8 +688,8 @@ html.cart-open, body.cart-open{ overflow:hidden !important; }
     </div>
 
     <div class="drawer-actions">
-      <button class="btn" type="button" onclick="sendWhats()">Finalizar no WhatsApp</button>
-      <button class="btn secondary" type="button" onclick="clearCart()">Limpar carrinho</button>
+      <button class="btn" onclick="sendWhats()">Finalizar no WhatsApp</button>
+      <button class="btn secondary" onclick="clearCart()">Limpar carrinho</button>
     </div>
   </div>
 </aside>
@@ -725,13 +719,11 @@ const products = [
 const AGE_KEY = "age_ok_v1";
 function openAgeModal(){
   document.getElementById("ageModal").classList.add("show");
-  document.documentElement.style.overflow = "hidden"; /* ✅ */
-  document.body.style.overflow = "hidden";            /* ✅ */
+  document.body.style.overflow = "hidden";
 }
 function closeAgeModal(){
   document.getElementById("ageModal").classList.remove("show");
-  document.documentElement.style.overflow = ""; /* ✅ */
-  document.body.style.overflow = "";            /* ✅ */
+  document.body.style.overflow = "";
 }
 function acceptAge(){
   localStorage.setItem(AGE_KEY, "1");
@@ -756,7 +748,6 @@ function buildFilters(){
 
   brands.forEach((brand, i) => {
     const btn = document.createElement("button");
-    btn.type = "button";
     btn.className = "chip" + (i === 0 ? " active" : "");
     btn.textContent = brand === "all" ? "Todos" : brand;
     btn.onclick = () => setFilter(brand);
@@ -780,9 +771,8 @@ function calcTotal(){
   return Object.values(cart).reduce((sum, item) => sum + (item.p * item.qty), 0);
 }
 
-/* ✅ mais compatível que replaceAll */
 function escapeQuotes(str){
-  return String(str).replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+  return String(str).replaceAll("\\", "\\\\").replaceAll("'", "\\'");
 }
 
 function popTotal(){
@@ -846,15 +836,12 @@ function clearCart(){
   update(true);
 }
 
-/* ✅ RENDER PRODUTOS (corrige bug do filtro) */
+/* ===== RENDER PRODUTOS ===== */
 function renderProducts(){
   grid.innerHTML = "";
+  const list = products.filter(p => currentFilter === "all" || p.brand === currentFilter);
 
-  const list = products
-    .map((p, idx) => ({ ...p, idx })) /* ✅ guarda índice real */
-    .filter(p => currentFilter === "all" || p.brand === currentFilter);
-
-  list.forEach((p) => {
+  list.forEach((p, i) => {
     grid.innerHTML += `
       <div class="product">
         <img src="${p.img}" alt="${p.n}" onerror="this.onerror=null; this.src='./img/logo.png';">
@@ -864,7 +851,7 @@ function renderProducts(){
           <span class="flavor">Consulte no WhatsApp</span>
         </div>
         <div class="price">R$ ${p.p.toFixed(2)}</div>
-        <button class="buy-btn" type="button" onclick="add(${p.idx})">Adicionar</button>
+        <button class="buy-btn" onclick="add(${i})">Adicionar</button>
       </div>
     `;
   });
@@ -874,14 +861,10 @@ function renderProducts(){
 function openCart(){
   document.getElementById("drawer").classList.add("open");
   document.getElementById("drawerOverlay").classList.add("open");
-  document.documentElement.classList.add("cart-open"); /* ✅ */
-  document.body.classList.add("cart-open");            /* ✅ */
 }
 function closeCart(){
   document.getElementById("drawer").classList.remove("open");
   document.getElementById("drawerOverlay").classList.remove("open");
-  document.documentElement.classList.remove("cart-open"); /* ✅ */
-  document.body.classList.remove("cart-open");            /* ✅ */
 }
 window.addEventListener("keydown", (e)=>{ if(e.key === "Escape") closeCart(); });
 
@@ -940,6 +923,3 @@ buildFilters();
 renderProducts();
 update(false);
 </script>
-
-</body>
-</html>
